@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Kill the Ghosts</title>
+
+    <style>
+        #sword {
+            position: absolute;
+            display: block;
+        }
+
+        #hontai {
+            width: 120px;
+        }
+
+        body {
+            background-image: url(bgimg.png);
+            width: 95%;
+            background-repeat: no-repeat;
+        }
+
+        #border {
+            width: 250px;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        #count {
+            color: rgb(255, 255, 255);
+        }
+
+        #num {
+            color: red;
+        }
+
+        #gametime {
+            color: white;
+        }
+
+        #span3 {
+            color: rgb(255, 0, 0);
+        }
+
+        #txt{
+            position: absolute;
+            top: 70px;
+            left: 55px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="sword">
+        <img src="sword.png" alt="" id="hontai">
+    </div>
+    <div id="txt">
+        <span id="count">你已击退<span id="num"></span>只幽灵</span><br>
+        <span id="gametime">剩余时间：<span id="span3"></span> s</span>
+    </div>
+    <img src="border.png" id="border" alt="">
+
+    <script>
+        document.onmousemove = function () {
+            var swordmove = document.getElementById("sword");
+            swordmove.style.top = parseInt(window.event.y - 60) + "px";
+            swordmove.style.left = parseInt(window.event.x - 60) + "px";
+        }//剑随着鼠标的移动而移动
+
+        window.onload = startgame;
+
+        function startgame() {
+            window.setInterval("ghost()", 1000);
+        }
+
+        var timer = window.setInterval('ghost()', 600);//每0.6s出现一只新的幽灵
+
+        function ghost() {
+            var obj = document.createElement('img');
+            obj.src = "ghost.gif";
+            var width = Math.floor(Math.random() * 90) + 90;//幽灵的大小随机
+            obj.width = width;
+            var x = Math.floor(Math.random() * 1400) + 200;
+            var y = Math.floor(Math.random() * 500) + 100;//幽灵的位置随机
+            obj.style.position = "absolute";
+            obj.style.top = y + "px";
+            obj.style.left = x + "px";
+            document.body.appendChild(obj);
+            obj.onclick = removeghost;
+        }
+
+        var n = 20;
+        window.onload = function () {
+            setInterval(countdown, 1000);
+        }
+        function countdown() {
+            if (n > 0) {
+                n--;
+                document.getElementById("span3").innerHTML = n;
+            }
+        }//游戏时长20s
+
+        var count = 0;
+        function removeghost() {
+            this.parentNode.removeChild(this);
+            if (n == 0) {
+                if (confirm("游戏结束\n你一共击退了" + count + "只幽灵！\n要再来一局吗？")) {
+                    window.location.href = "index.html";
+                } else {
+                    window.close();//点击“确定”后再来一局，点击“取消”后关闭本页面
+                }
+                window.clearInterval(timer);
+            }
+            count++;//记录已经被消灭的幽灵的数量
+            countghost();
+        }
+
+        function countghost() {
+            var num = document.getElementById("num");
+            num.innerHTML = count;
+        }
+
+    </script>
+</body>
+
+</html>
